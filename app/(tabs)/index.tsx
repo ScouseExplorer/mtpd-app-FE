@@ -120,6 +120,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 15,
     marginBottom: 15,
+    width: 250,
+    alignSelf: 'center',
     fontSize: 16,
   },
   button: {
@@ -128,6 +130,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
+    width: 190,
+    alignSelf: 'center',
+    borderWidth: 4,
+    borderColor: 'lightgrey',
   },
   buttonText: {
     color: 'white',

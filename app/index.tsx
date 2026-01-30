@@ -7,7 +7,7 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to the App!</Text>
       <Link href="/(tabs)" style={styles.link}>
-        Go to Login
+         Go to Login
       </Link>
     </View>
   );

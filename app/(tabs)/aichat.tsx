@@ -333,13 +333,15 @@ const styles = StyleSheet.create({
   messagesList: {
     flex: 1,
   },
+  // increase bottom padding so messages can scroll above the input/keyboard
   messagesContainer: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    paddingBottom: 20,
+    // larger padding bottom helps ensure recent messages aren't hidden by the input/keyboard
+    paddingBottom: Platform.OS === 'ios' ? 200 : 140,
   },
   messageContainer: {
-    marginBottom: 12,
+    marginBottom: 10,
     maxWidth: width * 0.8,
   },
   userMessageContainer: {
@@ -407,14 +409,17 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 25 : 25,
+    // slightly increased bottom padding so the input sits higher when keyboard is shown
+    paddingBottom: Platform.OS === 'ios' ? 85 : 12,
     paddingHorizontal: 16,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    marginBottom: Platform.OS === 'ios' ? 25 : 25,
+    // reduce the extra bottom margin to raise the input a bit
+    marginBottom: Platform.OS === 'ios' ? 12 : 8,
+    zIndex: 10,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -429,7 +434,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginRight: 8,
     fontSize: 16,
-    maxHeight: 100,
+    maxHeight: 120,
     backgroundColor: '#F5F5F5',
   },
   sendButton: {
