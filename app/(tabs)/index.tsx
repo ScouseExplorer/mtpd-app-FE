@@ -1,13 +1,9 @@
 import React from 'react';
-import { Image, Platform, StyleSheet, View, TextInput, Pressable } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler'; 
-
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { Image, StyleSheet, View, TextInput, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useState } from 'react';
 import { Link } from 'expo-router';
-
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -22,96 +18,87 @@ export default function Login() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      
-        <View style={styles.formContainer}>
-          {/* Logo */}
-          
-          <Image
-            source={require('@/assets/images/metds-logo-png.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          
-          
-          {/* Email Input */}
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#888"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <View style={styles.formContainer}>
+        {/* Logo */}
+        <Image
+          source={require('@/assets/images/metds-logo-png.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
-          {/* Password Input */}
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#888"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+        {/* Email Input */}
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#888"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-          {/* Login Button */}
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { backgroundColor: pressed ? '#FF5733' : '#007AFF' },
-            ]}
-            onPress={handleLogin}
-          >
-            <ThemedText style={styles.buttonText}>Sign In</ThemedText>
-            
-          </Pressable>
+        {/* Password Input */}
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#888"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-          {/* Google Login Button */}
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              { backgroundColor: pressed ? '#FF5733' : '#DB4437' }, // Google red color
-            ]}
-            onPress={handleGoogleLogin} 
-          >
-            <ThemedText style={styles.buttonText}>Sign In with Google</ThemedText>
-          </Pressable>
+        {/* Login Button */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: pressed ? '#FF5733' : '#007AFF' },
+          ]}
+          onPress={handleLogin}
+        >
+          <ThemedText style={styles.buttonText}>Sign In</ThemedText>
+        </Pressable>
 
-          {/* Additional Links */}
-          <View style={styles.linksContainer}>
-            <Link href="/(auth)/forgot-password" style={styles.linkText}>
-              Forgot Password?
-            </Link>
-            <Link href="/(auth)/create-account" style={styles.linkText}>
-              Create Account
-            </Link>
-          </View>
+        {/* Google Login Button */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: pressed ? '#FF5733' : '#DB4437' }, // Google red color
+          ]}
+          onPress={handleGoogleLogin}
+        >
+          <ThemedText style={styles.buttonText}>Sign In with Google</ThemedText>
+        </Pressable>
+
+        {/* Additional Links */}
+        <View style={styles.linksContainer}>
+          <Link href="/(auth)/forgot-password" style={styles.linkText}>
+            Forgot Password?
+          </Link>
+          <Link href="/(auth)/create-account" style={styles.linkText}>
+            Create Account
+          </Link>
         </View>
-      
-    </GestureHandlerRootView>
+      </View>
+    </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: 'flex-start', 
+  container: {
+    flex: 1,
+    backgroundColor: '#F9F9F9',
   },
   formContainer: {
     flex: 1,
-    padding: 10,
-    paddingTop: 150, 
-  
+    padding: 20,
+    justifyContent: 'center',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
-    
-    
   },
   input: {
     height: 50,
@@ -153,7 +140,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 150,
     alignSelf: 'center',
-    marginBottom: 1,
-    marginTop: -60,
+    marginBottom: 30,
   },
 });

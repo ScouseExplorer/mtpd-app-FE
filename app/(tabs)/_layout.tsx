@@ -18,19 +18,28 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarStyle: {
+          height: 60,
+          paddingBottom: 5,
+          paddingTop: 5,
+          borderTopWidth: 1,
+          borderTopColor: '#E5E5E5',
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Login',
+          href: null,
+        }}
+      />
+      
       <Tabs.Screen
         name="homepage"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
         }}
       />
       
@@ -38,7 +47,15 @@ export default function TabLayout() {
         name="aichat"
         options={{
           title: 'Chat',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="message.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="message.fill" color={color} />,
+        }}
+      />
+      
+      <Tabs.Screen 
+        name="bookmarks" 
+        options={{
+          title: 'Bookmarks',
+          tabBarIcon: ({ color }) => <IconSymbol size={24} name="bookmark.fill" color={color} />,
         }}
       />
     </Tabs>

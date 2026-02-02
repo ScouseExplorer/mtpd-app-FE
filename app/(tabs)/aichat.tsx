@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   Alert,
@@ -16,6 +15,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -154,23 +154,6 @@ const ChatApp = () => {
     );
   };
 
-  const renderMessage = ({ item }: { item: Message }) => {
-    const isUser = item.sender === 'user';
-    
-    return (
-      <View style={[styles.messageContainer, isUser ? styles.userMessageContainer : styles.botMessageContainer]}>
-        <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.botBubble]}>
-          <Text style={[styles.messageText, isUser ? styles.userText : styles.botText]}>
-            {item.text}
-          </Text>
-          <Text style={[styles.timestamp, isUser ? styles.userTimestamp : styles.botTimestamp]}>
-            {item.timestamp}
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   const renderTypingIndicator = () => {
     if (!isLoading) return null;
     
@@ -204,7 +187,7 @@ const ChatApp = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor="#25D366" />
       
       {/* Header */}
@@ -213,77 +196,79 @@ const ChatApp = () => {
         <TouchableOpacity
           style={styles.clearButton}
           onPress={clearChat}
+          disabled={messages.length === 0}
         >
           <Text style={styles.clearButtonText}>Clear</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Messages Area */}
-      <View style={styles.messagesArea}>
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.messagesList}
-          contentContainerStyle={styles.messagesContainer}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {messages.length === 0 ? (
-            <View style={styles.emptyContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.messagesArea}>
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.messagesList}
+            contentContainerStyle={styles.messagesContainer}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            onContentSizeChange={scrollToBottom}
+          >
+            {messages.length === 0 ? (
+              <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>🤖</Text>
               <Text style={styles.emptySubtext}>Start a conversation with ChatGPT!</Text>
-            </View>
-          ) : (
-            messages.map((item) => {
+              </View>
+            ) : (
+              messages.map((item) => {
               const isUser = item.sender === 'user';
               return (
                 <View key={item.id} style={[styles.messageContainer, isUser ? styles.userMessageContainer : styles.botMessageContainer]}>
-                  <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.botBubble]}>
-                    <Text style={[styles.messageText, isUser ? styles.userText : styles.botText]}>
-                      {item.text}
-                    </Text>
-                    <Text style={[styles.timestamp, isUser ? styles.userTimestamp : styles.botTimestamp]}>
-                      {item.timestamp}
-                    </Text>
-                  </View>
+                <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.botBubble]}>
+                  <Text style={[styles.messageText, isUser ? styles.userText : styles.botText]}>
+                  {item.text}
+                  </Text>
+                  <Text style={[styles.timestamp, isUser ? styles.userTimestamp : styles.botTimestamp]}>
+                  {item.timestamp}
+                  </Text>
+                </View>
                 </View>
               );
-            })
-          )}
-          {renderTypingIndicator()}
-        </ScrollView>
-      </View>
+              })
+            )}
+            {renderTypingIndicator()}
+          </ScrollView>
+        </View>
+      </TouchableWithoutFeedback>
 
       {/* Input Area with Keyboard Avoiding */}
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? -30 : -60}
-        enabled={true}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inputWrapper}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.textInput}
-                value={inputValue}
-                onChangeText={setInputValue}
-                placeholder="Type a message..."
-                placeholderTextColor="#999"
-                multiline
-                maxLength={1000}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.sendButton,
-                  (!inputValue.trim() || isLoading) && styles.sendButtonDisabled
-                ]}
-                onPress={sendMessage}
-                disabled={!inputValue.trim() || isLoading}
-              >
-                <Text style={styles.sendButtonText}>➤</Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.inputWrapper}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={inputValue}
+              onChangeText={setInputValue}
+              placeholder="Type a message..."
+              placeholderTextColor="#999"
+              multiline
+              maxLength={1000}
+              onSubmitEditing={sendMessage}
+              blurOnSubmit={false}
+            />
+            <TouchableOpacity
+              style={[
+              styles.sendButton,
+              (!inputValue.trim() || isLoading) && styles.sendButtonDisabled
+              ]}
+              onPress={sendMessage}
+              disabled={!inputValue.trim() || isLoading}
+            >
+              <Text style={styles.sendButtonText}>➤</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -293,10 +278,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ECE5DD',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
-  flex: {
-    flex: 1,
   },
   messagesArea: {
     flex: 1,
@@ -333,12 +314,10 @@ const styles = StyleSheet.create({
   messagesList: {
     flex: 1,
   },
-  // increase bottom padding so messages can scroll above the input/keyboard
   messagesContainer: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    // larger padding bottom helps ensure recent messages aren't hidden by the input/keyboard
-    paddingBottom: Platform.OS === 'ios' ? 200 : 140,
+    paddingBottom: 100,
   },
   messageContainer: {
     marginBottom: 10,
@@ -409,17 +388,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     paddingTop: 12,
-    // slightly increased bottom padding so the input sits higher when keyboard is shown
-    paddingBottom: Platform.OS === 'ios' ? 85 : 12,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 12,
     paddingHorizontal: 16,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    // reduce the extra bottom margin to raise the input a bit
-    marginBottom: Platform.OS === 'ios' ? 12 : 8,
-    zIndex: 10,
   },
   inputContainer: {
     flexDirection: 'row',

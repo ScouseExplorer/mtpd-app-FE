@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, Pressable, StyleSheet, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 const HomePage = () => {
   const router = useRouter();
@@ -11,11 +11,11 @@ const HomePage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.rowContainer}>
-            <Pressable style={[styles.box, styles.firstBox]} onPress={() => handlePress(1)}>
+            <Pressable style={[styles.box, styles.firstBox]} onPress={() => router.push('/quiz')}>
               <Text style={styles.boxText}>Theory Questions</Text>
             </Pressable>
             <Pressable style={[styles.box, styles.secondBox]} onPress={() => handlePress(2)}>
@@ -36,7 +36,8 @@ const HomePage = () => {
             <Pressable style={[styles.box, styles.sixthBox]} onPress={() => handlePress(6)}>
               <Text style={styles.boxText}>My Thoughts</Text>
             </Pressable>
-            <Pressable style={[styles.box, styles.sixthBox]} onPress={() => handlePress(6)}>
+
+            <Pressable style={[styles.box, styles.sixthBox]} onPress={() => router.push('/bookmarks')}>
               <Text style={styles.boxText}>Bookmarks</Text>
             </Pressable>
             
