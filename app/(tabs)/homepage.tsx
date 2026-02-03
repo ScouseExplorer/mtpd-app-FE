@@ -1,49 +1,131 @@
 import * as React from 'react';
-import { View, Text, Pressable, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const HomePage = () => {
   const router = useRouter();
 
-  const handlePress = (boxNumber: number) => {
-    Alert.alert(`Box ${boxNumber} Pressed!`);
+  const menuItems = [
+    {
+      id: 1,
+      title: 'Theory Questions',
+      subtitle: 'Practice mock tests',
+      icon: '📝',
+      gradient: ['#667eea', '#764ba2'] as const,
+      href: '/quiz',
+    },
+    {
+      id: 2,
+      title: 'Road Signs',
+      subtitle: 'Learn UK road signs',
+      icon: '🚦',
+      gradient: ['#f093fb', '#f5576c'] as const,
+      href: null,
+    },
+    {
+      id: 3,
+      title: 'Driving Videos',
+      subtitle: 'Hazard perception',
+      icon: '🎥',
+      gradient: ['#4facfe', '#00f2fe'] as const,
+      href: null,
+    },
+    {
+      id: 4,
+      title: 'Highway Code',
+      subtitle: 'Official guidelines',
+      icon: '📖',
+      gradient: ['#43e97b', '#38f9d7'] as const,
+      route: null,
+    },
+    {
+      id: 5,
+      title: 'My Thoughts',
+      subtitle: 'Journal & notes',
+      icon: '💭',
+      gradient: ['#fa709a', '#fee140'] as const,
+      route: null,
+    },
+    {
+      id: 6,
+      title: 'Bookmarks',
+      subtitle: 'Saved questions',
+      icon: '🔖',
+      gradient: ['#ffecd2', '#fcb69f'] as const,
+      href: '/bookmarks',
+    },
+  ];
+
+  const handlePress = (item: typeof menuItems[0]) => {
+    if (item.href) {
+      router.push(item.href as any);
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.rowContainer}>
-            <Pressable style={[styles.box, styles.firstBox]} onPress={() => router.push('/quiz')}>
-              <Text style={styles.boxText}>Theory Questions</Text>
-            </Pressable>
-            <Pressable style={[styles.box, styles.secondBox]} onPress={() => handlePress(2)}>
-              <Text style={styles.boxText}>Road Signs</Text>
-            </Pressable>
+      <LinearGradient
+        colors={['#f8f9fa', '#e9ecef']}
+        style={styles.gradientBackground}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.greeting}>Ready to Learn?</Text>
+            <Text style={styles.title}>Driving Theory Test</Text>
+            <Text style={styles.subtitle}>Master your UK driving theory exam</Text>
           </View>
 
-          <View style={styles.rowContainer}>
-            <Pressable style={[styles.box, styles.thirdBox]} onPress={() => handlePress(3)}>
-              <Text style={styles.boxText}>Driving Videos</Text>
-            </Pressable>
-            <Pressable style={[styles.box, styles.fifthBox]} onPress={() => handlePress(5)}>
-              <Text style={styles.boxText}>Highway Code</Text>
-            </Pressable>
+          {/* Menu Grid */}
+          <View style={styles.gridContainer}>
+            {menuItems.map((item, index) => (
+              <Pressable
+                key={item.id}
+                onPress={() => handlePress(item)}
+                style={({ pressed }) => [
+                  styles.cardWrapper,
+                  pressed && styles.cardPressed,
+                ]}
+              >
+                <LinearGradient
+                  colors={item.gradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.card}
+                >
+                  <View style={styles.iconContainer}>
+                    <Text style={styles.icon}>{item.icon}</Text>
+                  </View>
+                  <View style={styles.cardContent}>
+                    <Text style={styles.cardTitle}>{item.title}</Text>
+                    <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                  </View>
+                  <View style={styles.arrowContainer}>
+                    <Text style={styles.arrow}>→</Text>
+                  </View>
+                </LinearGradient>
+              </Pressable>
+            ))}
           </View>
 
-          <View style={styles.rowContainer}>
-            <Pressable style={[styles.box, styles.sixthBox]} onPress={() => handlePress(6)}>
-              <Text style={styles.boxText}>My Thoughts</Text>
-            </Pressable>
-
-            <Pressable style={[styles.box, styles.sixthBox]} onPress={() => router.push('/bookmarks')}>
-              <Text style={styles.boxText}>Bookmarks</Text>
-            </Pressable>
-            
+          {/* Stats Section */}
+          <View style={styles.statsContainer}>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>0</Text>
+              <Text style={styles.statLabel}>Questions Practiced</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>0%</Text>
+              <Text style={styles.statLabel}>Success Rate</Text>
+            </View>
           </View>
         </ScrollView>
-      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -53,50 +135,132 @@ export default HomePage;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '#f8f9fa',
   },
-  container: {
+  gradientBackground: {
     flex: 1,
   },
   scrollContent: {
+    paddingBottom: 40,
+  },
+  header: {
+    paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 150,
-    paddingHorizontal: 10,
+    paddingBottom: 32,
   },
-  rowContainer: {
+  greeting: {
+    fontSize: 16,
+    color: '#6c757d',
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#212529',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#6c757d',
+    fontWeight: '400',
+  },
+  gridContainer: {
+    paddingHorizontal: 16,
+  },
+  cardWrapper: {
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  cardPressed: {
+    opacity: 0.8,
+    transform: [{ scale: 0.98 }],
+  },
+  card: {
+    borderRadius: 20,
+    padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+    minHeight: 100,
   },
-  box: {
-    width: 170,
-    height: 170,
+  iconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
+    marginRight: 16,
   },
-  firstBox: {
-    backgroundColor: '#007AFF',
+  icon: {
+    fontSize: 28,
   },
-  secondBox: {
-    backgroundColor: '#34C759',
+  cardContent: {
+    flex: 1,
   },
-  thirdBox: {
-    backgroundColor: '#FF9500',
-  },
-  fourthBox: {
-    backgroundColor: '#FF2D55',
-  },
-  fifthBox: {
-    backgroundColor: '#5856D6',
-  },
-  sixthBox: {
-    backgroundColor: '#FF2D55',
-  },
-  boxText: {
-    color: '#fff',
+  cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 4,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontWeight: '500',
+  },
+  arrowContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrow: {
+    fontSize: 18,
+    color: '#ffffff',
+    fontWeight: 'bold',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    marginTop: 24,
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  statNumber: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#212529',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 13,
+    color: '#6c757d',
+    fontWeight: '500',
     textAlign: 'center',
   },
 });
