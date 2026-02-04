@@ -56,6 +56,14 @@ const HomePage = () => {
       gradient: ['#ffecd2', '#fcb69f'] as const,
       href: '/bookmarks',
     },
+    {
+      id: 7,
+      title: 'Flashcards',
+      subtitle: 'Official Question',
+      icon: '🃏',
+      gradient: ['#ffecd2', '#a89ffc'] as const,
+      href: '/null',
+    },
   ];
 
   const handlePress = (item: typeof menuItems[0]) => {
@@ -113,17 +121,6 @@ const HomePage = () => {
             ))}
           </View>
 
-          {/* Stats Section */}
-          <View style={styles.statsContainer}>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Questions Practiced</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statNumber}>0%</Text>
-              <Text style={styles.statLabel}>Success Rate</Text>
-            </View>
-          </View>
         </ScrollView>
       </LinearGradient>
     </SafeAreaView>

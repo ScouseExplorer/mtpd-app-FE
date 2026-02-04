@@ -20,6 +20,7 @@ export default function CreateAccount() {
         }
 
         // Here you would typically handle the signup logic, e.g., API call
+        // please add a button to the login page that redirects to the login page after successful signup
     }
     
     return (
