@@ -1,7 +1,6 @@
+import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, } from 'react-native';
-
-
 
 export default function CreateAccount() {
 
@@ -68,6 +67,12 @@ export default function CreateAccount() {
         <TouchableOpacity style={styles.signupBox} onPress={handleSignup}>
                     <Text style={styles.buttonText}>Send</Text>
                 </TouchableOpacity>
+
+        <Link href="/" asChild>
+                    <TouchableOpacity style={styles.backButton}>
+                        <Text style={styles.backButtonText}>← Back to Login</Text>
+                    </TouchableOpacity>
+        </Link>
         </View>
     );
 }
@@ -106,5 +111,14 @@ const styles = StyleSheet.create({
         color: '#FFFFFF', // White text color
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    backButton: {
+        marginTop: 20,
+        alignItems: 'center',
+        padding: 10,
+    },
+    backButtonText: {
+        color: '#007AFF',
+        fontSize: 16,
     },
 });

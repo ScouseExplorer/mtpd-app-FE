@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity, } from 'react-native';
-
+import { Link } from 'expo-router';
 
 export default function ForgotPassword() {
 
-    const [password, setPasswordChange] = useState('');
-    
-    
     const [email, setEmail] = useState('');
     
     const handleForgotPassword = () => {
@@ -35,6 +32,12 @@ export default function ForgotPassword() {
         <TouchableOpacity style={styles.resetBox} onPress={handleForgotPassword}>
             <Text style={styles.buttonText}>Send</Text>
         </TouchableOpacity>
+
+        <Link href="/" asChild>
+            <TouchableOpacity style={styles.backButton}>
+                <Text style={styles.backButtonText}>← Back to Login</Text>
+            </TouchableOpacity>
+        </Link>
         </View>
     );
 }
@@ -73,5 +76,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         marginBottom: 15,
+    },
+    backButton: {
+        marginTop: 20,
+        alignItems: 'center',
+        padding: 10,
+    },
+    backButtonText: {
+        color: '#007AFF',
+        fontSize: 16,
     },
 });
