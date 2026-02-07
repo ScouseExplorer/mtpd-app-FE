@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 
 const HomePage = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const HomePage = () => {
       subtitle: 'Practice mock tests',
       icon: '📝',
       gradient: ['#667eea', '#764ba2'] as const,
-      href: '/quiz',
+      route: '/quiz',
     },
     {
       id: 2,
@@ -22,7 +23,7 @@ const HomePage = () => {
       subtitle: 'Learn UK road signs',
       icon: '🚦',
       gradient: ['#f093fb', '#f5576c'] as const,
-      href: null,
+      route: '/roadsigns',
     },
     {
       id: 3,
@@ -30,7 +31,7 @@ const HomePage = () => {
       subtitle: 'Hazard perception',
       icon: '🎥',
       gradient: ['#4facfe', '#00f2fe'] as const,
-      href: null,
+      route: null,
     },
     {
       id: 4,
@@ -54,76 +55,91 @@ const HomePage = () => {
       subtitle: 'Saved questions',
       icon: '🔖',
       gradient: ['#ffecd2', '#fcb69f'] as const,
-      href: '/bookmarks',
+      route: '/bookmarks',
     },
     {
       id: 7,
       title: 'Flashcards',
-      subtitle: 'Official Question',
+      subtitle: 'Quick revision',
       icon: '🃏',
-      gradient: ['#ffecd2', '#a89ffc'] as const,
-      href: '/null',
-    },
+      gradient: ['#ffecd2', '#fcb69f'] as const,
+      route: '/flashcards',
+    }
   ];
 
   const handlePress = (item: typeof menuItems[0]) => {
-    if (item.href) {
-      router.push(item.href as any);
+    if (item.route) {
+      router.push(item.route as any);
     }
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <LinearGradient
-        colors={['#f8f9fa', '#e9ecef']}
-        style={styles.gradientBackground}
-      >
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
+    <>
+      <StatusBar style="dark" />
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <LinearGradient
+          colors={['#f8f9fa', '#e9ecef']}
+          style={styles.gradientBackground}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.greeting}>Ready to Learn?</Text>
-            <Text style={styles.title}>Driving Theory Test</Text>
-            <Text style={styles.subtitle}>Master your UK driving theory exam</Text>
-          </View>
+          <ScrollView 
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.greeting}>Ready to Learn?</Text>
+              <Text style={styles.title}>Driving Theory Test</Text>
+              <Text style={styles.subtitle}>Master your UK driving theory exam</Text>
+            </View>
 
-          {/* Menu Grid */}
-          <View style={styles.gridContainer}>
-            {menuItems.map((item, index) => (
-              <Pressable
-                key={item.id}
-                onPress={() => handlePress(item)}
-                style={({ pressed }) => [
-                  styles.cardWrapper,
-                  pressed && styles.cardPressed,
-                ]}
-              >
-                <LinearGradient
-                  colors={item.gradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.card}
+            {/* Menu Grid */}
+            <View style={styles.gridContainer}>
+              {menuItems.map((item, index) => (
+                <Pressable
+                  key={item.id}
+                  onPress={() => handlePress(item)}
+                  style={({ pressed }) => [
+                    styles.cardWrapper,
+                    pressed && styles.cardPressed,
+                  ]}
+                  android_ripple={{ color: 'rgba(255, 255, 255, 0.3)' }}
                 >
-                  <View style={styles.iconContainer}>
-                    <Text style={styles.icon}>{item.icon}</Text>
-                  </View>
-                  <View style={styles.cardContent}>
-                    <Text style={styles.cardTitle}>{item.title}</Text>
-                    <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
-                  </View>
-                  <View style={styles.arrowContainer}>
-                    <Text style={styles.arrow}>→</Text>
-                  </View>
-                </LinearGradient>
-              </Pressable>
-            ))}
-          </View>
+                  <LinearGradient
+                    colors={item.gradient}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.card}
+                  >
+                    <View style={styles.iconContainer}>
+                      <Text style={styles.icon}>{item.icon}</Text>
+                    </View>
+                    <View style={styles.cardContent}>
+                      <Text style={styles.cardTitle} numberOfLines={1}>{item.title}</Text>
+                      <Text style={styles.cardSubtitle} numberOfLines={1}>{item.subtitle}</Text>
+                    </View>
+                    <View style={styles.arrowContainer}>
+                      <Text style={styles.arrow}>→</Text>
+                    </View>
+                  </LinearGradient>
+                </Pressable>
+              ))}
+            </View>
 
-        </ScrollView>
-      </LinearGradient>
-    </SafeAreaView>
+            {/* Stats Section */}
+            <View style={styles.statsContainer}>
+              <View style={styles.statCard}>
+                <Text style={styles.statNumber}>0</Text>
+                <Text style={styles.statLabel}>Questions Practiced</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statNumber}>0%</Text>
+                <Text style={styles.statLabel}>Success Rate</Text>
+              </View>
+            </View>
+          </ScrollView>
+        </LinearGradient>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -142,7 +158,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'android' ? 16 : 20,
     paddingBottom: 32,
   },
   greeting: {
@@ -150,17 +166,33 @@ const styles = StyleSheet.create({
     color: '#6c757d',
     fontWeight: '500',
     marginBottom: 4,
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif-medium',
+      },
+    }),
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: Platform.OS === 'android' ? '700' : 'bold',
     color: '#212529',
     marginBottom: 8,
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif',
+        includeFontPadding: false,
+      },
+    }),
   },
   subtitle: {
     fontSize: 16,
     color: '#6c757d',
     fontWeight: '400',
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif',
+      },
+    }),
   },
   gridContainer: {
     paddingHorizontal: 16,
@@ -171,22 +203,27 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     opacity: 0.8,
-    transform: [{ scale: 0.98 }],
   },
   card: {
     borderRadius: 20,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
     minHeight: 100,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   iconContainer: {
     width: 56,
@@ -196,23 +233,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
+    overflow: 'hidden',
   },
   icon: {
     fontSize: 28,
+    ...Platform.select({
+      android: {
+        includeFontPadding: false,
+        textAlignVertical: 'center',
+      },
+    }),
   },
   cardContent: {
     flex: 1,
+    justifyContent: 'center',
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: Platform.OS === 'android' ? '700' : 'bold',
     color: '#ffffff',
     marginBottom: 4,
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif',
+        includeFontPadding: false,
+      },
+    }),
   },
   cardSubtitle: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.85)',
     fontWeight: '500',
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif-medium',
+        includeFontPadding: false,
+      },
+    }),
   },
   arrowContainer: {
     width: 32,
@@ -221,11 +278,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   arrow: {
     fontSize: 18,
     color: '#ffffff',
     fontWeight: 'bold',
+    ...Platform.select({
+      android: {
+        includeFontPadding: false,
+        textAlignVertical: 'center',
+      },
+    }),
   },
   statsContainer: {
     flexDirection: 'row',
@@ -239,25 +303,43 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   statNumber: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: Platform.OS === 'android' ? '700' : 'bold',
     color: '#212529',
     marginBottom: 4,
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif',
+        includeFontPadding: false,
+      },
+    }),
   },
   statLabel: {
     fontSize: 13,
     color: '#6c757d',
     fontWeight: '500',
     textAlign: 'center',
+    ...Platform.select({
+      android: {
+        fontFamily: 'sans-serif-medium',
+        includeFontPadding: false,
+      },
+    }),
   },
 });
